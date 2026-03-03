@@ -12,6 +12,13 @@ export default defineConfig({
       'Permissions-Policy': 'display-capture=(self)',
     },
   },
+  preview: {
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Permissions-Policy': 'display-capture=(self)',
+    },
+  },
   // The alias is no longer needed with the stable ffmpeg version
   // and was causing resolution issues for other @ffmpeg packages.
   // resolve: {
