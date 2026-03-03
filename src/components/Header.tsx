@@ -19,7 +19,8 @@ const Header = ({ apiKey, onApiKeyChange }: HeaderProps) => {
     { path: '/faq', label: 'שאלות נפוצות', icon: HelpCircle },
     { path: '/contact', label: 'צור קשר', icon: null },
     { path: '/terms', label: 'תנאי שימוש', icon: FileText },
-    { path: '/privacy', label: 'מדיניות פרטיות', icon: Shield }
+    { path: '/privacy', label: 'מדיניות פרטיות', icon: Shield },
+    { path: '/login', label: 'התחבר', icon: Key }
   ]
 
   return (

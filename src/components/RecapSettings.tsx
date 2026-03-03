@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
-import { Settings, Clock, Scissors } from 'lucide-react'
+import { Settings, Clock, Scissors, Globe, Youtube, Zap, ChevronDown } from 'lucide-react'
+import { useState } from 'react'
 import type { RecapSettings } from '../types'
 
 interface RecapSettingsProps {
@@ -23,6 +24,8 @@ const RecapSettingsComponent = ({
   settings, 
   onSettingsChange 
 }: RecapSettingsProps) => {
+  const [expandAdvanced, setExpandAdvanced] = useState(false)
+  
   const handleChange = (field: keyof RecapSettings, value: any) => {
     onSettingsChange({
       ...settings,
@@ -165,6 +168,212 @@ const RecapSettingsComponent = ({
             כל {settings.intervalSeconds} שניות ייחתך קטע של {settings.captureSeconds} שנייה.
           </p>
         </div>
+
+        {/* הגדרות מתקדמות */}
+        <button
+          type="button"
+          onClick={() => setExpandAdvanced(!expandAdvanced)}
+          className="w-full bg-gray-700 hover:bg-gray-600 text-gray-300 px-4 py-3 rounded-lg flex items-center justify-center space-x-2 space-x-reverse transition-colors"
+        >
+          <Zap className="h-4 w-4" />
+          <span>⚙️ הגדרות סיכום מתקדמות</span>
+          <ChevronDown className={`h-4 w-4 transition-transform ${expandAdvanced ? 'rotate-180' : ''}`} />
+        </button>
+
+        {expandAdvanced && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="bg-gray-700/50 rounded-lg p-4 border border-gray-600 space-y-4"
+          >
+            {/* שדות בסיסיים */}
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-gray-200 flex items-center">
+                <span className="inline-block w-2 h-2 bg-blue-400 rounded-full ml-2"></span>
+                פרטי הסדרה / הסרט
+              </h3>
+              
+              <div>
+                <label className="block text-xs font-medium text-gray-400 mb-1">
+                  कותרת הסרט / סדרה *
+                </label>
+                <input
+                  type="text"
+                  placeholder="זן את שם הסרט או הסדרה"
+                  value={settings.movieTitle || ''}
+                  onChange={(e) => handleChange('movieTitle', e.target.value)}
+                  className="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-gray-400 mb-1">
+                  ז'אנר
+                </label>
+                <select
+                  value={settings.genre || ''}
+                  onChange={(e) => handleChange('genre', e.target.value)}
+                  className="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                >
+                  <option value="">בחר ז'אנר</option>
+                  <option value="action">אקשן</option>
+                  <option value="drama">דרמה</option>
+                  <option value="comedy">קומדיה</option>
+                  <option value="horror">אימה</option>
+                  <option value="thriller">תריller</option>
+                  <option value="fantasy">פנטזיה</option>
+                  <option value="scifi">מדע בדיון</option>
+                  <option value="romance">רומנטיקה</option>
+                  <option value="animation">אנימציה</option>
+                </select>
+              </div>
+            </div>
+
+            {/* חיפוש באינטרנט */}
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-gray-200 flex items-center">
+                <Globe className="h-4 w-4 ml-2" />
+                חיפוש באינטרנט
+              </h3>
+
+              <label className="flex items-center space-x-2 space-x-reverse cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={settings.enableWebSearch || false}
+                  onChange={(e) => handleChange('enableWebSearch', e.target.checked)}
+                  className="w-4 h-4 rounded accent-blue-500"
+                />
+                <span className="text-xs text-gray-300">
+                  אסוף מידע נוסף לשיפור הדיוק
+                </span>
+              </label>
+
+              {settings.enableWebSearch && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="space-y-2 pt-2"
+                >
+                  <div>
+                    <label className="block text-xs font-medium text-gray-400 mb-1">
+                      Google Search API Key
+                    </label>
+                    <input
+                      type="password"
+                      placeholder="הזן את מפתח ה-API של Google Search"
+                      value={settings.googleSearchApiKey || ''}
+                      onChange={(e) => handleChange('googleSearchApiKey', e.target.value)}
+                      className="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    />
+                    <a
+                      href="https://developers.google.com/custom-search/v1/overview"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-blue-400 hover:text-blue-300 mt-1 inline-block"
+                    >
+                      איך להשיג מפתח API?
+                    </a>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-400 mb-1">
+                      Search Engine ID
+                    </label>
+                    <input
+                      type="password"
+                      placeholder="הזן את מזהה מנוע החיפוש"
+                      value={settings.searchEngineId || ''}
+                      onChange={(e) => handleChange('searchEngineId', e.target.value)}
+                      className="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </div>
+
+            {/* למידה מיוטיוב */}
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-gray-200 flex items-center">
+                <Youtube className="h-4 w-4 ml-2" />
+                למידה מיוטיוב
+              </h3>
+
+              <label className="flex items-center space-x-2 space-x-reverse cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={settings.enableYoutubeLearning || false}
+                  onChange={(e) => handleChange('enableYoutubeLearning', e.target.checked)}
+                  className="w-4 h-4 rounded accent-blue-500"
+                />
+                <span className="text-xs text-gray-300">
+                  שיפור הסגנון על בסיס ערוצים מצליחים
+                </span>
+              </label>
+
+              {settings.enableYoutubeLearning && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="space-y-2 pt-2"
+                >
+                  <div>
+                    <label className="block text-xs font-medium text-gray-400 mb-1">
+                      מפתח YouTube Data API v3 (אופציונלי)
+                    </label>
+                    <input
+                      type="password"
+                      placeholder="הזן מפתח YouTube Data API v3..."
+                      value={settings.youtubeApiKey || ''}
+                      onChange={(e) => handleChange('youtubeApiKey', e.target.value)}
+                      className="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    />
+                    <a 
+                      href="https://console.cloud.google.com/apis/enable?project=_" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-xs text-blue-400 hover:text-blue-300 mt-1 inline-block"
+                    >
+                      איך להשיג מפתח API?
+                    </a>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-400 mb-1">
+                      קישור ליוטיוב (אופציונלי)
+                    </label>
+                    <input
+                      type="url"
+                      placeholder="הדבק כאן קישור לערוץ היוטיוב..."
+                      value={settings.youtubeChannelLink || ''}
+                      onChange={(e) => handleChange('youtubeChannelLink', e.target.value)}
+                      className="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      המערכת תלמד מהסגנון של הערוץ לשיפור איכות הסיכום
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </div>
+
+            {/* למידה מתמשכת */}
+            <div className="space-y-3 pt-2 border-t border-gray-600">
+              <label className="flex items-center space-x-2 space-x-reverse cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={settings.enableContinuousLearning || false}
+                  onChange={(e) => handleChange('enableContinuousLearning', e.target.checked)}
+                  className="w-4 h-4 rounded accent-blue-500"
+                />
+                <span className="text-xs text-gray-300">
+                  למידה מתמשכת פעילה
+                </span>
+              </label>
+              <p className="text-xs text-gray-500 pl-6">
+                המערכת לומדת מכל סיכום שנוצר ומשתפרת עם הזמן
+              </p>
+            </div>
+          </motion.div>
+        )}
 
         {/* סיכום הגדרות */}
         <div className="bg-gray-700 rounded-lg p-4">

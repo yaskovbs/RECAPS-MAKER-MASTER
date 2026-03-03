@@ -7,11 +7,29 @@ export interface VideoFile {
 }
 
 export interface RecapSettings {
+  // הגדרות בסיסיות
   duration: number // בשניות
   intervalSeconds: number // כל כמה שניות לחתוך
   captureSeconds: number // כמה שניות לקחת בכל פעם
   script: string
   apiKey: string
+  
+  // הגדרות מתקדמות
+  movieTitle?: string // כותרת הסרט/סדרה
+  genre?: string // ז'אנר
+  
+  // חיפוש באינטרנט
+  enableWebSearch?: boolean // הפעלת חיפוש באינטרנט
+  googleSearchApiKey?: string // Google Search API Key
+  searchEngineId?: string // Search Engine ID (CX)
+  
+  // למידה מיוטיוב
+  enableYoutubeLearning?: boolean // הפעלת למידה מיוטיוב
+  youtubeApiKey?: string // YouTube Data API v3 Key
+  youtubeChannelLink?: string // קישור לערוץ יוטיוב ללמידה
+  
+  // למידה מתמשכת
+  enableContinuousLearning?: boolean // הפעלת למידה מתמשכת
 }
 
 export interface ProcessingStatus {

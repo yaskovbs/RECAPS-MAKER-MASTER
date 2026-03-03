@@ -8,6 +8,7 @@ import Footer from './components/Footer'
 import TermsOfServicePage from './components/TermsOfServicePage'
 import PrivacyPolicyPage from './components/PrivacyPolicyPage'
 import VoiceoverPage from './components/VoiceoverPage'
+import AuthPage from './components/AuthPage'
 import { supabase } from './lib/supabase'
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/terms" element={<TermsOfServicePage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/login" element={<AuthPage />} />
         </Routes>
       </main>
       <Footer />
